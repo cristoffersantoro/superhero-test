@@ -1,59 +1,58 @@
-# HeroApp
+# 🦸‍♂️ Hero App — Frontend Angular + SSR
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 20.3.6.
+Este projeto é o frontend da aplicação **Superhero**, utilizando **Angular 20 com Server-Side Rendering (SSR)** e **PrimeNG**.
 
-## Development server
+---
 
-To start a local development server, run:
+## ✅ Pré-requisitos
 
-```bash
-ng serve
-```
+Certifique-se de ter instalado:
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+- **Node.js** (versão LTS — 18.x ou 20.x)
+- **Angular CLI**
 
-## Code scaffolding
+npm install -g @angular/cli
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+---
 
-```bash
-ng generate component component-name
-```
+## 🚀 Como rodar o projeto
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+A aplicação usa SSR, então o processo envolve **build + execução do servidor**.
 
-```bash
-ng generate --help
-```
+### 1️⃣ Instalar dependências
 
-## Building
+npm install
 
-To build the project run:
+### 2️⃣ Gerar o bundle (compilar com SSR)
 
-```bash
 ng build
-```
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+### 3️⃣ Iniciar com SSR habilitado
 
-## Running unit tests
+npm run serve:ssr:hero-app
 
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
+---
 
-```bash
-ng test
-```
+## 🌐 Acesso
 
-## Running end-to-end tests
+👉 http://localhost:4000
 
-For end-to-end (e2e) testing, run:
+---
 
-```bash
-ng e2e
-```
+## 🧪 Modo desenvolvimento sem SSR (opcional)
 
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
+ng serve
 
-## Additional Resources
+---
 
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+## 🔗 Conexão com Backend
+
+http://localhost:8080
+
+Se estiver em outra porta, altere em:
+
+src/environments/environment.ts
+
+---
+
+Pronto! 🦸‍♂️
