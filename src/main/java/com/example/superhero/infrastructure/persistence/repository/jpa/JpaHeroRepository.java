@@ -1,6 +1,6 @@
-package infrastructure.persistence.repository.jpa;
+package com.example.superhero.infrastructure.persistence.repository.jpa;
 
-import infrastructure.persistence.entity.JpaHeroEntity;
+import com.example.superhero.infrastructure.persistence.entity.JpaHeroEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface JpaHeroRepository extends JpaRepository<JpaHeroEntity, Long> {

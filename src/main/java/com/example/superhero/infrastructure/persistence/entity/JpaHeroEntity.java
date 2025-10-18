@@ -1,4 +1,4 @@
-package infrastructure.persistence.entity;
+package com.example.superhero.infrastructure.persistence.entity;
 
 import jakarta.persistence.*;
 

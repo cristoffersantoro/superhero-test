@@ -1,4 +1,4 @@
-package domain.model;
+package com.example.superhero.domain.model;
 
 import java.time.Instant;
 import java.util.HashSet;

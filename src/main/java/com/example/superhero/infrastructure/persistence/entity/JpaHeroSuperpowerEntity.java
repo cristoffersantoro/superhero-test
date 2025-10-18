@@ -1,8 +1,6 @@
-package infrastructure.persistence.entity;
+package com.example.superhero.infrastructure.persistence.entity;
 
 import jakarta.persistence.*;
-
-import java.time.Instant;
 
 @Entity
 @Table(

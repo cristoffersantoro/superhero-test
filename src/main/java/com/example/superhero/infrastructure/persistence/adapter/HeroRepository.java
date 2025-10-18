@@ -1,14 +1,13 @@
-package infrastructure.persistence.adapter;
+package com.example.superhero.infrastructure.persistence.adapter;
 
-import application.port.HeroRepositoryPort;
-import domain.model.Hero;
-import domain.model.HeroSuperpower;
-import infrastructure.persistence.entity.JpaHeroEntity;
-import infrastructure.persistence.entity.JpaHeroSuperpowerEntity;
-import infrastructure.persistence.entity.JpaSuperpowerEntity;
-import infrastructure.persistence.repository.jpa.JpaHeroRepository;
-import infrastructure.persistence.repository.jpa.JpaHeroSuperpowerRepository;
-import infrastructure.persistence.repository.jpa.JpaSuperpowerRepository;
+import com.example.superhero.application.port.HeroRepositoryPort;
+import com.example.superhero.domain.model.Hero;
+import com.example.superhero.domain.model.HeroSuperpower;
+import com.example.superhero.infrastructure.persistence.entity.JpaHeroEntity;
+import com.example.superhero.infrastructure.persistence.entity.JpaHeroSuperpowerEntity;
+import com.example.superhero.infrastructure.persistence.entity.JpaSuperpowerEntity;
+import com.example.superhero.infrastructure.persistence.repository.jpa.JpaHeroRepository;
+import com.example.superhero.infrastructure.persistence.repository.jpa.JpaSuperpowerRepository;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 

@@ -1,6 +1,6 @@
-package application.port;
+package com.example.superhero.application.port;
 
-import domain.model.Superpower;
+import com.example.superhero.domain.model.Superpower;
 
 import java.util.List;
 import java.util.Optional;
