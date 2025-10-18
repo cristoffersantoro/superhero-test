@@ -27,6 +27,7 @@ export class App {
 
   items: MenuItem[] = [
     { label: 'Início', icon: 'pi pi-home', routerLink: '/' },
-    { label: 'Heróis', icon: 'pi pi-users', routerLink: '/heroes' }
+    { label: 'Heróis', icon: 'pi pi-users', routerLink: '/heroes' },
+    { label: 'Superpoderes', icon: 'pi pi-bolt', routerLink: '/superpowers' }
   ];
 }

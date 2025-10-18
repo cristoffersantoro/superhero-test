@@ -11,6 +11,10 @@ export const routes: Routes = [
     loadChildren: () =>
       import('./features/heroes/heroes.routes').then(m => m.default)
   },
+  {
+    path: 'superpowers',
+    loadChildren: () => import('./features/superpowers/superpowers.routes').then(m => m.default)
+  },
 
   // opcional: rota 404
   { path: '**', redirectTo: 'heroes' }

@@ -1,0 +1,79 @@
+<!-- src/app/features/superpowers/superpowers.component.html -->
+<p-toast></p-toast>
+<p-confirmDialog></p-confirmDialog>
+
+<div class="page">
+  <p-toolbar class="mb-3">
+    <div class="p-toolbar-group-start">
+      <h2 class="m-0">Superpoderes</h2>
+    </div>
+    <div class="p-toolbar-group-end">
+      <button pButton label="Novo" icon="pi pi-plus" (click)="openNew()"></button>
+      <button pButton label="Recarregar" icon="pi pi-refresh" class="p-button-secondary ml-2" (click)="load()"></button>
+    </div>
+  </p-toolbar>
+
+  <div class="card">
+    <ng-container *ngIf="!loading(); else loadingTpl">
+      <p-table [value]="items()" dataKey="id" [rows]="10" [paginator]="true" [responsiveLayout]="'scroll'">
+        <ng-template pTemplate="header">
+          <tr>
+            <th style="width:6rem">ID</th>
+            <th>Nome</th>
+            <th>Descrição</th>
+            <th style="width: 10rem">Ações</th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-sp>
+          <tr>
+            <td>{{ sp.id }}</td>
+            <td class="font-semibold">{{ sp.nome }}</td>
+            <td>{{ sp.descricao }}</td>
+            <td class="text-right">
+              <button pButton icon="pi pi-pencil" class="p-button-text p-button-sm mr-1" (click)="openEdit(sp)"></button>
+              <button pButton icon="pi pi-trash" class="p-button-text p-button-danger p-button-sm" (click)="confirmDelete(sp)"></button>
+            </td>
+          </tr>
+        </ng-template>
+      </p-table>
+    </ng-container>
+    <ng-template #loadingTpl>
+      <div class="loading">
+        <p-progressSpinner></p-progressSpinner>
+      </div>
+    </ng-template>
+  </div>
+</div>
+
+<p-dialog
+  [visible]="dialogVisible()"
+  (visibleChange)="dialogVisible.set($event)"
+  [modal]="true"
+  [style]="{ width: '560px' }"
+  [draggable]="false"
+  [resizable]="false"
+  [header]="dialogTitle()"
+>
+  <form [formGroup]="form" (ngSubmit)="save()" class="grid formgrid">
+    <div class="field col-12">
+      <label for="nome">Nome</label>
+      <input pInputText id="nome" formControlName="nome" autocomplete="off" />
+      <small class="p-error" *ngIf="f.nome.touched && f.nome.invalid">Obrigatório (máx. 120)</small>
+    </div>
+
+    <div class="field col-12">
+      <label for="descricao">Descrição</label>
+      <textarea
+        id="descricao"
+        formControlName="descricao"
+        rows="4"
+        class="p-inputtext p-inputtextarea p-component w-full"
+      ></textarea>
+    </div>
+
+    <div class="col-12 flex justify-content-end gap-2 mt-3">
+      <button type="button" pButton label="Cancelar" class="p-button-text" (click)="hideDialog()"></button>
+      <button type="submit" pButton [label]="(editingId() == null) ? 'Criar' : 'Salvar'" [disabled]="submitting()" [icon]="submitting() ? 'pi pi-spin pi-spinner' : 'pi pi-check'"></button>
+    </div>
+  </form>
+</p-dialog>
