@@ -12,6 +12,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -42,9 +43,8 @@ public class HeroRepository implements HeroRepositoryPort {
     @Override
     @Transactional
     public Hero save(Hero hero) {
-// Salva dados básicos do herói
         JpaHeroEntity entity = (hero.getId() != null)
-                ? heroJpa.findById(hero.getId()).orElseGet(JpaHeroEntity::new)
+                ? heroJpa.findById(hero.getId()).orElseThrow() // se não existir, prefiro 404
                 : new JpaHeroEntity();
 
         entity.setId(hero.getId());
@@ -54,23 +54,34 @@ public class HeroRepository implements HeroRepositoryPort {
         entity.setAltura(hero.getAltura());
         entity.setPeso(hero.getPeso());
 
-        JpaHeroEntity saved = heroJpa.save(entity);
+        JpaHeroEntity managed = heroJpa.save(entity);
 
-        saved.getAssociations().clear();
-        if (hero.getAssociations() != null) {
-            for (HeroSuperpower assoc : hero.getAssociations()) {
-                Long spId = assoc.getSuperpowerId();
-                JpaSuperpowerEntity spRef = powerJpa.getReferenceById(spId);
+        final Set<Long> alvoIds = (hero.getAssociations() == null)
+                ? Set.of()
+                : hero.getAssociations().stream()
+                .map(HeroSuperpower::getSuperpowerId)
+                .filter(Objects::nonNull)
+                .collect(Collectors.toSet());
 
+        managed.getAssociations().removeIf(link ->
+                !alvoIds.contains(link.getSuperpoder().getId())
+        );
+
+        Set<Long> atuais = managed.getAssociations().stream()
+                .map(l -> l.getSuperpoder().getId())
+                .collect(Collectors.toSet());
+
+        for (Long spId : alvoIds) {
+            if (!atuais.contains(spId)) {
+                JpaSuperpowerEntity spRef = powerJpa.getReferenceById(spId); // ou findById(...).orElseThrow()
                 JpaHeroSuperpowerEntity link = new JpaHeroSuperpowerEntity();
-                link.setHeroi(saved);
+                link.setHeroi(managed);
                 link.setSuperpoder(spRef);
-                saved.getAssociations().add(link);
+                managed.getAssociations().add(link);
             }
         }
-        JpaHeroEntity savedWithLinks = heroJpa.save(saved);
-// Retorna domínio atualizado
-        return toDomain(savedWithLinks);
+
+        return toDomain(managed);
     }
 
     @Override

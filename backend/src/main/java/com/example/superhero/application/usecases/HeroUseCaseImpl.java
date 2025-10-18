@@ -4,6 +4,7 @@ import com.example.superhero.application.port.HeroRepositoryPort;
 import com.example.superhero.application.port.SuperpowerRepositoryPort;
 import com.example.superhero.domain.model.Hero;
 import com.example.superhero.domain.model.HeroSuperpower;
+import com.example.superhero.domain.model.Superpower;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -84,8 +85,29 @@ public class HeroUseCaseImpl implements HeroUseCase {
     }
 
     private void validateSuperpowersExist(List<Long> ids) {
-        if (ids == null || ids.isEmpty()) throw new EntityNotFoundException("superpoder.listaVaziaOuInvalida");
-        var found = powerRepo.findAllById(ids);
-        if (found.size() != ids.size()) throw new EntityNotFoundException("superpoder.listaVaziaOuInvalida");
+        var field = "superpoderesIds"; //TODO: Buscar outra forma de passar esse parametro
+        if (ids == null || ids.isEmpty()) {
+            throw new com.example.superhero.infrastructure.web.error.InvalidReferenceException(
+                    field, java.util.Set.of(), "Provide at least one superpower");
+        }
+
+        var requisitados = new java.util.LinkedHashSet<Long>();
+        for (Long id : ids) if (id != null) requisitados.add(id);
+
+        if (requisitados.isEmpty()) {
+            throw new com.example.superhero.infrastructure.web.error.InvalidReferenceException(
+                    field, java.util.Set.of(), "Provide at least one superpower");
+        }
+
+        var existentes = new HashSet<>(powerRepo.findAllById(List.copyOf(requisitados)));
+
+        var faltantes = requisitados.stream()
+                .filter(id -> existentes.stream().noneMatch(sp -> sp.getId().equals(id)))
+                .collect(java.util.stream.Collectors.toCollection(java.util.LinkedHashSet::new));
+
+        if (!faltantes.isEmpty()) {
+            throw new com.example.superhero.infrastructure.web.error.InvalidReferenceException(
+                    field, faltantes, "These IDs do not exist:");
+        }
     }
 }

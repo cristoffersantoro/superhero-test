@@ -73,4 +73,23 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
                 req.getRequestURI(), null);
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(body);
     }
+
+    @ExceptionHandler(InvalidReferenceException.class)
+    public ResponseEntity<Object> handleInvalidReference(InvalidReferenceException ex,
+                                                         HttpServletRequest req,
+                                                         Locale locale) {
+        var fieldErr = new ApiError.FieldError(
+                ex.getField(),
+                ex.getMessage() + (ex.getInvalidIds().isEmpty() ? "" : " " + ex.getInvalidIds())
+        );
+
+        var body = ApiError.of(
+                HttpStatus.UNPROCESSABLE_ENTITY.value(),
+                HttpStatus.UNPROCESSABLE_ENTITY.getReasonPhrase(),
+                messageSource.getMessage("erro.validacao", null, "Validation error", locale),
+                req.getRequestURI(),
+                java.util.List.of(fieldErr)
+        );
+        return ResponseEntity.unprocessableEntity().body(body);
+    }
 }
