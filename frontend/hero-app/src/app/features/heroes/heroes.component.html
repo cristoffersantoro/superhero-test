@@ -1,0 +1,112 @@
+<!-- src/app/features/heroes/heroes.component.html -->
+<p-toast></p-toast>
+<p-confirmDialog></p-confirmDialog>
+
+<div class="page">
+  <p-toolbar class="mb-3">
+    <div class="p-toolbar-group-start">
+      <h2 class="m-0">Heróis</h2>
+    </div>
+    <div class="p-toolbar-group-end">
+      <button pButton label="Novo" icon="pi pi-plus" (click)="openNew()"></button>
+      <button pButton label="Recarregar" icon="pi pi-refresh" class="p-button-secondary ml-2" (click)="load()"></button>
+    </div>
+  </p-toolbar>
+
+  <div class="card">
+    <ng-container *ngIf="!loading(); else loadingTpl">
+      <p-table [value]="heroes()" dataKey="id" [rows]="10" [paginator]="true" [responsiveLayout]="'scroll'">
+        <ng-template pTemplate="header">
+          <tr>
+            <th>ID</th>
+            <th>Nome</th>
+            <th>Herói</th>
+            <th>Nascimento</th>
+            <th>Altura</th>
+            <th>Peso</th>
+            <th>Poderes</th>
+            <th style="width: 10rem">Ações</th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-h>
+          <tr>
+            <td>{{ h.id }}</td>
+            <td>{{ h.nome }}</td>
+            <td><span class="font-semibold">{{ h.nomeHeroi }}</span></td>
+            <td>{{ h.dataNascimento | date: 'yyyy-MM-dd' }}</td>
+            <td>{{ h.altura }}</td>
+            <td>{{ h.peso }}</td>
+            <td>
+              <p-tag *ngFor="let sp of h.superpoderesIds" [value]="sp" class="mr-1 mb-1"></p-tag>
+            </td>
+            <td class="text-right">
+              <button pButton icon="pi pi-pencil" class="p-button-text p-button-sm mr-1" (click)="openEdit(h)"></button>
+              <button pButton icon="pi pi-trash" class="p-button-text p-button-danger p-button-sm" (click)="confirmDelete(h)"></button>
+            </td>
+          </tr>
+        </ng-template>
+      </p-table>
+    </ng-container>
+    <ng-template #loadingTpl>
+      <div class="loading">
+        <p-progressSpinner></p-progressSpinner>
+      </div>
+    </ng-template>
+  </div>
+</div>
+
+<!-- Signals: use one-way + change -->
+<p-dialog
+  [visible]="dialogVisible()"
+  (visibleChange)="dialogVisible.set($event)"
+  [modal]="true"
+  [style]="{ width: '600px' }"
+  [draggable]="false"
+  [resizable]="false"
+  [header]="dialogTitle()"
+>
+  <form [formGroup]="form" (ngSubmit)="save()" class="grid formgrid">
+    <div class="field col-12 md:col-6">
+      <label for="nome">Nome</label>
+      <input pInputText id="nome" formControlName="nome" autocomplete="off" />
+      <small class="p-error" *ngIf="form.controls.nome.touched && form.controls.nome.invalid">Obrigatório (máx. 120)</small>
+    </div>
+
+    <div class="field col-12 md:col-6">
+      <label for="nomeHeroi">Nome de herói</label>
+      <input pInputText id="nomeHeroi" formControlName="nomeHeroi" autocomplete="off" />
+      <small class="p-error" *ngIf="form.controls.nomeHeroi.touched && form.controls.nomeHeroi.invalid">Obrigatório (máx. 120)</small>
+    </div>
+
+    <div class="field col-12 md:col-6">
+      <label for="dataNascimento">Data de nascimento</label>
+      <!-- PrimeNG 20: DatePicker -->
+      <p-datepicker id="dataNascimento" formControlName="dataNascimento"></p-datepicker>
+      <small class="p-error" *ngIf="form.controls.dataNascimento.touched && form.controls.dataNascimento.invalid">Obrigatório</small>
+    </div>
+
+    <div class="field col-6 md:col-3">
+      <label for="altura">Altura (m)</label>
+      <p-inputNumber id="altura" formControlName="altura" mode="decimal" [minFractionDigits]="2" [maxFractionDigits]="2"></p-inputNumber>
+      <small class="p-error" *ngIf="form.controls.altura.touched && form.controls.altura.invalid">Obrigatório</small>
+    </div>
+
+    <div class="field col-6 md:col-3">
+      <label for="peso">Peso (kg)</label>
+      <p-inputNumber id="peso" formControlName="peso" mode="decimal" [minFractionDigits]="1" [maxFractionDigits]="1"></p-inputNumber>
+      <small class="p-error" *ngIf="form.controls.peso.touched && form.controls.peso.invalid">Obrigatório</small>
+    </div>
+
+    <div class="field col-12">
+      <label for="superpoderesCsv">IDs de superpoderes (CSV)</label>
+      <input pInputText id="superpoderesCsv" formControlName="superpoderesCsv" placeholder="ex: 1,2,3" />
+      <small class="text-muted">Separe por vírgula. Pelo menos 1 ID.</small>
+      <small class="p-error" *ngIf="form.controls.superpoderesCsv.touched && form.controls.superpoderesCsv.invalid">Obrigatório</small>
+    </div>
+
+    <div class="col-12 flex justify-content-end gap-2 mt-3">
+      <button type="button" pButton label="Cancelar" class="p-button-text" (click)="hideDialog()"></button>
+      <button type="submit" pButton [label]="(editingId() == null) ? 'Criar' : 'Salvar'" [disabled]="submitting()" [icon]="submitting() ? 'pi pi-spin pi-spinner' : 'pi pi-check'"></button>
+    </div>
+  </form>
+</p-dialog>
