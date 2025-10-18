@@ -1,6 +1,6 @@
 package com.example.superhero.infrastructure.web.controller;
 
-import com.example.superhero.application.dto.HeroiDTOs;
+import com.example.superhero.application.dto.HeroDTOs;
 import com.example.superhero.application.usecases.HeroUseCase;
 import com.example.superhero.infrastructure.web.error.ApiError;
 import io.swagger.v3.oas.annotations.Operation;
@@ -41,7 +41,7 @@ public class HeroController {
             requestBody = @RequestBody(
                     required = true,
                     content = @Content(
-                            schema = @Schema(implementation = HeroiDTOs.HeroiCreateDTO.class),
+                            schema = @Schema(implementation = HeroDTOs.HeroiCreateDTO.class),
                             examples = @ExampleObject(
                                     name = "Exemplo criação",
                                     value = "{\n" +
@@ -62,11 +62,11 @@ public class HeroController {
                     content = @Content(schema = @Schema(implementation = ApiError.class)))
     })
     @PostMapping
-    public ResponseEntity<HeroiDTOs.HeroiResponseDTO> criar(
-            @Valid @RequestBody HeroiDTOs.HeroiCreateDTO dto) {
+    public ResponseEntity<HeroDTOs.HeroiResponseDTO> criar(
+            @Valid @RequestBody HeroDTOs.HeroiCreateDTO dto) {
         var saved = useCase.criar(dto.nome(), dto.nomeHeroi(), dto.dataNascimento(), dto.altura(), dto.peso(), dto.superpoderesIds());
         return ResponseEntity.created(URI.create("/herois/" + saved.getId()))
-                .body(HeroiDTOs.HeroiResponseDTO.fromDomain(saved));
+                .body(HeroDTOs.HeroiResponseDTO.fromDomain(saved));
     }
 
     @Operation(summary = "Lista heróis")
@@ -74,7 +74,7 @@ public class HeroController {
     @GetMapping
     public ResponseEntity<?> listar() {
         var list = useCase.listar().stream()
-                .map(HeroiDTOs.HeroiResponseDTO::fromDomain)
+                .map(HeroDTOs.HeroiResponseDTO::fromDomain)
                 .collect(Collectors.toList());
         return ResponseEntity.ok(list);
     }
@@ -86,11 +86,11 @@ public class HeroController {
                     content = @Content(schema = @Schema(implementation = ApiError.class)))
     })
     @GetMapping("/{id}")
-    public ResponseEntity<HeroiDTOs.HeroiResponseDTO> buscar(
+    public ResponseEntity<HeroDTOs.HeroiResponseDTO> buscar(
             @Parameter(description = "ID do herói", example = "1")
             @PathVariable Long id) {
         var h = useCase.buscar(id);
-        return ResponseEntity.ok(HeroiDTOs.HeroiResponseDTO.fromDomain(h));
+        return ResponseEntity.ok(HeroDTOs.HeroiResponseDTO.fromDomain(h));
     }
 
     @Operation(
@@ -98,7 +98,7 @@ public class HeroController {
             requestBody = @RequestBody(
                     required = true,
                     content = @Content(
-                            schema = @Schema(implementation = HeroiDTOs.HeroiUpdateDTO.class),
+                            schema = @Schema(implementation = HeroDTOs.HeroiUpdateDTO.class),
                             examples = @ExampleObject(
                                     name = "Exemplo atualização",
                                     value = "{\n" +
@@ -121,12 +121,12 @@ public class HeroController {
                     content = @Content(schema = @Schema(implementation = ApiError.class)))
     })
     @PutMapping("/{id}")
-    public ResponseEntity<HeroiDTOs.HeroiResponseDTO> atualizar(
+    public ResponseEntity<HeroDTOs.HeroiResponseDTO> atualizar(
             @Parameter(description = "ID do herói", example = "1")
             @PathVariable Long id,
-            @Valid @RequestBody HeroiDTOs.HeroiUpdateDTO dto) {
+            @Valid @RequestBody HeroDTOs.HeroiUpdateDTO dto) {
         var h = useCase.atualizar(id, dto.nome(), dto.nomeHeroi(), dto.dataNascimento(), dto.altura(), dto.peso(), dto.superpoderesIds());
-        return ResponseEntity.ok(HeroiDTOs.HeroiResponseDTO.fromDomain(h));
+        return ResponseEntity.ok(HeroDTOs.HeroiResponseDTO.fromDomain(h));
     }
 
     @Operation(summary = "Remove um herói")
@@ -150,13 +150,13 @@ public class HeroController {
                     content = @Content(schema = @Schema(implementation = ApiError.class)))
     })
     @PostMapping("/{id}/superpoderes/{superpoderId}")
-    public ResponseEntity<HeroiDTOs.HeroiResponseDTO> adicionarSuperpoder(
+    public ResponseEntity<HeroDTOs.HeroiResponseDTO> adicionarSuperpoder(
             @Parameter(description = "ID do herói", example = "1")
             @PathVariable Long id,
             @Parameter(description = "ID do superpoder", example = "2")
             @PathVariable Long superpoderId) {
         var h = useCase.adicionarSuperpoder(id, superpoderId);
-        return ResponseEntity.ok(HeroiDTOs.HeroiResponseDTO.fromDomain(h));
+        return ResponseEntity.ok(HeroDTOs.HeroiResponseDTO.fromDomain(h));
     }
 
     @Operation(summary = "Remove superpoder do herói")
@@ -166,12 +166,12 @@ public class HeroController {
                     content = @Content(schema = @Schema(implementation = ApiError.class)))
     })
     @DeleteMapping("/{id}/superpoderes/{superpoderId}")
-    public ResponseEntity<HeroiDTOs.HeroiResponseDTO> removerSuperpoder(
+    public ResponseEntity<HeroDTOs.HeroiResponseDTO> removerSuperpoder(
             @Parameter(description = "ID do herói", example = "1")
             @PathVariable Long id,
             @Parameter(description = "ID do superpoder", example = "2")
             @PathVariable Long superpoderId) {
         var h = useCase.removerSuperpoder(id, superpoderId);
-        return ResponseEntity.ok(HeroiDTOs.HeroiResponseDTO.fromDomain(h));
+        return ResponseEntity.ok(HeroDTOs.HeroiResponseDTO.fromDomain(h));
     }
 }

@@ -4,7 +4,7 @@ import com.example.superhero.domain.model.Superpower;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
-public class SuperpoderDTOs {
+public class SuperpowerDTOs {
     public record SuperpoderCreateDTO(
             @NotBlank(message = "{superpoder.nome.notblank}")
             @Size(max = 50, message = "{superpoder.nome.size}")

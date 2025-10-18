@@ -1,6 +1,6 @@
 package com.example.superhero.infrastructure.web.controller;
 
-import com.example.superhero.application.dto.SuperpoderDTOs;
+import com.example.superhero.application.dto.SuperpowerDTOs;
 import com.example.superhero.application.usecases.SuperpowerUseCase;
 import com.example.superhero.infrastructure.web.error.ApiError;
 import io.swagger.v3.oas.annotations.Operation;
@@ -21,11 +21,11 @@ import java.util.stream.Collectors;
 @Tag(name = "Superpoderes", description = "CRUD de superpoderes")
 @RestController
 @RequestMapping("/superpoderes")
-public class SuperpoderController {
+public class SuperpowerController {
 
     private final SuperpowerUseCase useCase;
 
-    public SuperpoderController(SuperpowerUseCase useCase) {
+    public SuperpowerController(SuperpowerUseCase useCase) {
         this.useCase = useCase;
     }
 
@@ -34,7 +34,7 @@ public class SuperpoderController {
             requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
                     required = true,
                     content = @Content(
-                            schema = @Schema(implementation = SuperpoderDTOs.SuperpoderCreateDTO.class),
+                            schema = @Schema(implementation = SuperpowerDTOs.SuperpoderCreateDTO.class),
                             examples = @ExampleObject(
                                     name = "ex1",
                                     value = "{ \"superpoder\": \"Voo\", \"descricao\": \"Capacidade de voar\" }"
@@ -48,11 +48,11 @@ public class SuperpoderController {
                     content = @Content(schema = @Schema(implementation = ApiError.class)))
     })
     @PostMapping
-    public ResponseEntity<SuperpoderDTOs.SuperpoderResponseDTO> criar(
-            @Valid @RequestBody SuperpoderDTOs.SuperpoderCreateDTO dto) {
+    public ResponseEntity<SuperpowerDTOs.SuperpoderResponseDTO> criar(
+            @Valid @RequestBody SuperpowerDTOs.SuperpoderCreateDTO dto) {
         var s = useCase.criar(dto.superpoder(), dto.descricao());
         return ResponseEntity.created(URI.create("/superpoderes/" + s.getId()))
-                .body(new SuperpoderDTOs.SuperpoderResponseDTO(s.getId(), s.getSuperpoder(), s.getDescricao()));
+                .body(new SuperpowerDTOs.SuperpoderResponseDTO(s.getId(), s.getSuperpoder(), s.getDescricao()));
     }
 
     @Operation(summary = "Lista superpoderes")
@@ -60,7 +60,7 @@ public class SuperpoderController {
     @GetMapping
     public ResponseEntity<?> listar() {
         var list = useCase.listar().stream()
-                .map(s -> new SuperpoderDTOs.SuperpoderResponseDTO(s.getId(), s.getSuperpoder(), s.getDescricao()))
+                .map(s -> new SuperpowerDTOs.SuperpoderResponseDTO(s.getId(), s.getSuperpoder(), s.getDescricao()))
                 .collect(Collectors.toList());
         return ResponseEntity.ok(list);
     }
@@ -72,11 +72,11 @@ public class SuperpoderController {
                     content = @Content(schema = @Schema(implementation = ApiError.class)))
     })
     @GetMapping("/{id}")
-    public ResponseEntity<SuperpoderDTOs.SuperpoderResponseDTO> buscar(
+    public ResponseEntity<SuperpowerDTOs.SuperpoderResponseDTO> buscar(
             @Parameter(description = "ID do superpoder", example = "1")
             @PathVariable Long id) {
         var s = useCase.buscar(id);
-        return ResponseEntity.ok(new SuperpoderDTOs.SuperpoderResponseDTO(s.getId(), s.getSuperpoder(), s.getDescricao()));
+        return ResponseEntity.ok(new SuperpowerDTOs.SuperpoderResponseDTO(s.getId(), s.getSuperpoder(), s.getDescricao()));
     }
 
     @Operation(summary = "Atualiza um superpoder")
@@ -88,12 +88,12 @@ public class SuperpoderController {
                     content = @Content(schema = @Schema(implementation = ApiError.class)))
     })
     @PutMapping("/{id}")
-    public ResponseEntity<SuperpoderDTOs.SuperpoderResponseDTO> atualizar(
+    public ResponseEntity<SuperpowerDTOs.SuperpoderResponseDTO> atualizar(
             @Parameter(description = "ID do superpoder", example = "1")
             @PathVariable Long id,
-            @Valid @RequestBody SuperpoderDTOs.SuperpoderUpdateDTO dto) {
+            @Valid @RequestBody SuperpowerDTOs.SuperpoderUpdateDTO dto) {
         var s = useCase.atualizar(id, dto.superpoder(), dto.descricao());
-        return ResponseEntity.ok(new SuperpoderDTOs.SuperpoderResponseDTO(s.getId(), s.getSuperpoder(), s.getDescricao()));
+        return ResponseEntity.ok(new SuperpowerDTOs.SuperpoderResponseDTO(s.getId(), s.getSuperpoder(), s.getDescricao()));
     }
 
     @Operation(summary = "Remove um superpoder")

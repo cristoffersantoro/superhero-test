@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-public class HeroiDTOs {
+public class HeroDTOs {
     public record HeroiCreateDTO(
             @NotBlank(message = "{heroi.nome.notblank}")
             @Size(max = 120, message = "{heroi.nome.size}")
